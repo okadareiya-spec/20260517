@@ -47,10 +47,11 @@ class EmailAdapter(NotificationService):
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def _send_with_retry(self, subject: str, body: str, recipient_email: str) -> None:
         resend.api_key = settings.RESEND_API_KEY
-        resend.Emails.send({
+        params: resend.Emails.SendParams = {
             "from": "onboarding@resend.dev",
-            "to": recipient_email,
+            "to": [recipient_email],
             "subject": subject,
             "text": body,
-        })
+        }
+        resend.Emails.send(params)
         logger.info("メール送信成功: subject=%s to=%s", subject, recipient_email)
