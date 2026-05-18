@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { settingsApi, categoriesApi } from "../api/client";
+import { settingsApi } from "../api/client";
 import { useCreateCategory, useDeleteCategory, useCategories } from "../hooks/useCategories";
 
 export default function SettingsPage() {
