@@ -67,3 +67,16 @@ export const settingsApi = {
   update: (notification_email: string | null) =>
     http.put<UserSettings>("/settings", { notification_email }).then((r) => r.data),
 };
+
+export interface NotificationEmail {
+  id: string;
+  email: string;
+  created_at: string;
+}
+
+export const notificationEmailsApi = {
+  list: () => http.get<NotificationEmail[]>("/settings/emails").then((r) => r.data),
+  add: (email: string) =>
+    http.post<NotificationEmail>("/settings/emails", { email }).then((r) => r.data),
+  delete: (id: string) => http.delete(`/settings/emails/${id}`),
+};

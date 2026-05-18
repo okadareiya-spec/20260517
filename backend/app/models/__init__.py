@@ -3,6 +3,7 @@ from app.models.task import Task, TaskDependency, TaskStatus, TaskPriority, Depe
 from app.models.reminder import Reminder
 from app.models.user_settings import UserSettings
 from app.models.webhook_log import WebhookLog
+from app.models.notification_email import NotificationEmail
 
 __all__ = [
     "Category",
@@ -14,4 +15,5 @@ __all__ = [
     "Reminder",
     "UserSettings",
     "WebhookLog",
+    "NotificationEmail",
 ]

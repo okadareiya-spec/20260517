@@ -13,3 +13,15 @@ class SettingsResponse(BaseModel):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class NotificationEmailCreate(BaseModel):
+    email: EmailStr
+
+
+class NotificationEmailResponse(BaseModel):
+    id: str
+    email: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}

@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from app.models.task import Task
 from app.models.reminder import Reminder
 from app.models.user_settings import UserSettings
+from app.models.notification_email import NotificationEmail
 from app.schemas.reminder import ReminderCreate
 from app.services.notification.base import NotificationEvent
 from app.services.notification.email import EmailAdapter
@@ -93,9 +94,8 @@ def check_and_send_reminders() -> None:
         if not pending:
             return
 
-        user_settings = db.query(UserSettings).first()
-        recipient = user_settings.notification_email if user_settings else None
-        if not recipient:
+        recipients = [r.email for r in db.query(NotificationEmail).all()]
+        if not recipients:
             logger.warning(
                 "通知先メールアドレス未設定のため%d件のリマインドをスキップします。設定画面でメールアドレスを登録してください。",
                 len(pending),
@@ -108,11 +108,15 @@ def check_and_send_reminders() -> None:
                 reminder.is_sent = True
                 continue
             due_str = task.due_date.strftime("%Y/%m/%d %H:%M") if task.due_date else None
-            try:
-                _notifier.send(NotificationEvent.REMINDER, task.title, due_str, recipient)
+            all_sent = True
+            for recipient in recipients:
+                try:
+                    _notifier.send(NotificationEvent.REMINDER, task.title, due_str, recipient)
+                except Exception:
+                    logger.exception("リマインドメール送信失敗: reminder_id=%s to=%s", reminder.id, recipient)
+                    all_sent = False
+            if all_sent:
                 reminder.is_sent = True
-            except Exception:
-                logger.exception("リマインドメール送信失敗: reminder_id=%s", reminder.id)
 
         db.commit()
     finally:
