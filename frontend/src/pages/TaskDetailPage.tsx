@@ -155,6 +155,8 @@ export default function TaskDetailPage() {
           >
             <option value="FS">FS</option>
             <option value="FF">FF</option>
+            <option value="SS">SS</option>
+            <option value="SF">SF</option>
           </select>
           <button
             onClick={handleAddDep}

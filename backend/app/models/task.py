@@ -21,6 +21,8 @@ class TaskPriority(str, enum.Enum):
 class DependencyType(str, enum.Enum):
     FS = "FS"
     FF = "FF"
+    SS = "SS"
+    SF = "SF"
 
 
 class Task(Base):

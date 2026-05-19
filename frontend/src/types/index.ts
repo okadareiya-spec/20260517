@@ -1,6 +1,6 @@
 export type TaskStatus = "未着手" | "進行中" | "完了";
 export type TaskPriority = "高" | "中" | "低";
-export type DependencyType = "FS" | "FF";
+export type DependencyType = "FS" | "FF" | "SS" | "SF";
 
 export interface Category {
   id: string;

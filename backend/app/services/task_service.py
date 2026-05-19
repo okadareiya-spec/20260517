@@ -178,6 +178,24 @@ def _validate_dependency_constraints(db: Session, task: Task, new_status: TaskSt
                 status_code=400,
                 detail=f"FF依存: タスク『{prereq.title}』が完了するまで「完了」にできません",
             )
+        if (
+            dep.dependency_type == DependencyType.SS
+            and new_status == TaskStatus.IN_PROGRESS
+            and prereq.status == TaskStatus.NOT_STARTED
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=f"SS依存: タスク『{prereq.title}』が着手されるまで「進行中」にできません",
+            )
+        if (
+            dep.dependency_type == DependencyType.SF
+            and new_status == TaskStatus.COMPLETED
+            and prereq.status == TaskStatus.NOT_STARTED
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=f"SF依存: タスク『{prereq.title}』が着手されるまで「完了」にできません",
+            )
 
 
 def add_dependency(db: Session, task_id: str, data: DependencyCreate) -> TaskDependency:
